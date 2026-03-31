@@ -1,186 +1,237 @@
-'use client'
-import React from 'react'
-import { useState, useEffect } from 'react'
+"use client";
+import React, { useState, useEffect } from "react";
+import { Icon } from "@iconify/react/dist/iconify.js";
 
 const ContactForm = () => {
   const [formData, setFormData] = useState({
-    firstname: '',
-    lastname: '',
-    email: '',
-    phnumber: '',
-    Message: '',
-  })
-  const [submitted, setSubmitted] = useState(false)
-  const [showThanks, setShowThanks] = useState(false)
-  const [loader, setLoader] = useState(false)
-  const [isFormValid, setIsFormValid] = useState(false)
+    firstname: "",
+    lastname: "",
+    email: "",
+    phnumber: "",
+    Message: "",
+  });
+  const [loader, setLoader] = useState(false);
+  const [showThanks, setShowThanks] = useState(false);
+  const [isFormValid, setIsFormValid] = useState(false);
 
   useEffect(() => {
     const isValid = Object.values(formData).every(
-      (value) => value.trim() !== ''
-    )
-    setIsFormValid(isValid)
-  }, [formData])
-  const handleChange = (e: any) => {
-    const { name, value } = e.target
-    setFormData((prevData) => ({
-      ...prevData,
-      [name]: value,
-    }))
-  }
-  const reset = () => {
-    formData.firstname = ''
-    formData.lastname = ''
-    formData.email = ''
-    formData.phnumber = ''
-    formData.Message = ''
-  }
-  const handleSubmit = async (e: any) => {
-    e.preventDefault()
-    setLoader(true)
+      (value) => value.trim() !== "",
+    );
+    setIsFormValid(isValid);
+  }, [formData]);
 
-    fetch('https://formsubmit.co/ajax/arshvasani9@gmail.com', {
-      method: 'POST',
-      headers: { 'Content-type': 'application/json' },
-      body: JSON.stringify({
-        Name: formData.firstname,
-        LastName: formData.lastname,
-        Email: formData.email,
-        PhoneNo: formData.phnumber,
-        Message: formData.Message,
-      }),
-    })
-      .then((response) => response.json())
-      .then((data) => {
-        if (data.success) {
-          setSubmitted(true)
-          setShowThanks(true)
-          reset()
+  const handleChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
+  ) => {
+    const { name, value } = e.target;
+    setFormData((prev) => ({ ...prev, [name]: value }));
+  };
 
-          setTimeout(() => {
-            setShowThanks(false)
-          }, 5000)
-        }
+  const resetForm = () => {
+    setFormData({
+      firstname: "",
+      lastname: "",
+      email: "",
+      phnumber: "",
+      Message: "",
+    });
+  };
 
-        reset()
-      })
-      .catch((error) => {
-        setLoader(false)
-        console.log(error.message)
-      })
-  }
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setLoader(true);
+
+    try {
+      const response = await fetch(
+        "https://formsubmit.co/ajax/arshvasani9@gmail.com",
+        {
+          method: "POST",
+          headers: { "Content-type": "application/json" },
+          body: JSON.stringify(formData),
+        },
+      );
+      const data = await response.json();
+      if (data.success) {
+        setShowThanks(true);
+        resetForm();
+        setTimeout(() => setShowThanks(false), 5000);
+      }
+    } catch (error) {
+      console.error("Submission error", error);
+    } finally {
+      setLoader(false);
+    }
+  };
+
   return (
-    <section id='contact'>
-      <div className='container'>
-        <div className='relative'>
-          <h2 className='mb-9 text-center'>
-            Get in Touch
-          </h2>
-          <form
-            onSubmit={handleSubmit}
-            className='flex flex-wrap w-full m-auto justify-between'>
-            <div className='sm:flex gap-3 w-full'>
-              <div className='mx-0 my-2.5 flex-1'>
-                <label
-                  htmlFor='fname'
-                  className='pb-3 inline-block text-base'>
-                  First Name
-                </label>
-                <input
-                  id='fname'
-                  type='text'
-                  name='firstname'
-                  value={formData.firstname}
-                  onChange={handleChange}
-                  placeholder='John'
-                  className='w-full text-base px-4 rounded-2xl py-2.5 border-solid border transition-all duration-500 focus:border-primary focus:outline-0'
-                />
-              </div>
-              <div className='mx-0 my-2.5 flex-1'>
-                <label
-                  htmlFor='lname'
-                  className='pb-3 inline-block text-base'>
-                  Last Name
-                </label>
-                <input
-                  id='lname'
-                  type='text'
-                  name='lastname'
-                  value={formData.lastname}
-                  onChange={handleChange}
-                  placeholder='Doe'
-                  className='w-full text-base px-4 rounded-2xl py-2.5 border-solid border transition-all duration-500 focus:border-primary focus:outline-0'
-                />
+    <section
+      id="contact"
+      className="py-24 lg:py-32 bg-white relative overflow-hidden"
+    >
+      {/* Background Decor */}
+      <div className="absolute top-0 right-0 w-1/2 h-full bg-slate-50/50 -z-10 hidden lg:block" />
+
+      <div className="container mx-auto px-6">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-16 items-start">
+          {/* Left Side: Text Content */}
+          <div className="lg:col-span-5">
+            <h4 className="text-primary font-bold tracking-widest uppercase text-sm mb-4">
+              Contact Us
+            </h4>
+            <h2 className="text-5xl lg:text-7xl font-black text-[#01111E] tracking-tighter leading-none mb-8">
+              Let’s build <br />
+              <span className="text-black/20">something great.</span>
+            </h2>
+            <p className="text-xl text-black/50 mb-10 leading-relaxed">
+              Have questions about Ocean Bridge? Our team is here to help you
+              scale your global communication.
+            </p>
+
+            <div className="space-y-6">
+              <div className="flex items-center gap-4">
+                <div className="w-12 h-12 rounded-2xl bg-primary/10 flex items-center justify-center text-primary">
+                  <Icon icon="tabler:mail" className="text-2xl" />
+                </div>
+                <div>
+                  <p className="text-sm text-black/40 uppercase font-bold tracking-wider">
+                    Email us
+                  </p>
+                  <p className="text-[#01111E] font-medium">
+                    hello@oceanbridge.com
+                  </p>
+                </div>
               </div>
             </div>
-            <div className='sm:flex gap-3 w-full'>
-              <div className='mx-0 my-2.5 flex-1'>
-                <label htmlFor='email' className='pb-3 inline-block text-base'>
-                  Email address
-                </label>
-                <input
-                  id='email'
-                  type='email'
-                  name='email'
-                  value={formData.email}
-                  onChange={handleChange}
-                  placeholder='john.doe@example.com'
-                  className='w-full text-base px-4 rounded-2xl py-2.5 border-solid border transition-all duration-500 focus:border-primary focus:outline-0'
-                />
+          </div>
+
+          {/* Right Side: The Form */}
+          <div className="lg:col-span-7 bg-white lg:p-12 rounded-[2.5rem] lg:border border-black/5 lg:shadow-2xl lg:shadow-black/[0.03] relative">
+            <form onSubmit={handleSubmit} className="space-y-6">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div>
+                  <label
+                    htmlFor="fname"
+                    className="block text-sm font-bold text-[#01111E] mb-2 px-1"
+                  >
+                    First Name
+                  </label>
+                  <input
+                    id="fname"
+                    type="text"
+                    name="firstname"
+                    value={formData.firstname}
+                    onChange={handleChange}
+                    placeholder="John"
+                    className="w-full bg-slate-50 border-none rounded-2xl px-6 py-4 focus:ring-2 focus:ring-primary/20 transition-all outline-none text-[#01111E]"
+                  />
+                </div>
+                <div>
+                  <label
+                    htmlFor="lname"
+                    className="block text-sm font-bold text-[#01111E] mb-2 px-1"
+                  >
+                    Last Name
+                  </label>
+                  <input
+                    id="lname"
+                    type="text"
+                    name="lastname"
+                    value={formData.lastname}
+                    onChange={handleChange}
+                    placeholder="Doe"
+                    className="w-full bg-slate-50 border-none rounded-2xl px-6 py-4 focus:ring-2 focus:ring-primary/20 transition-all outline-none text-[#01111E]"
+                  />
+                </div>
               </div>
-              <div className='mx-0 my-2.5 flex-1'>
+
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div>
+                  <label
+                    htmlFor="email"
+                    className="block text-sm font-bold text-[#01111E] mb-2 px-1"
+                  >
+                    Email Address
+                  </label>
+                  <input
+                    id="email"
+                    type="email"
+                    name="email"
+                    value={formData.email}
+                    onChange={handleChange}
+                    placeholder="john@example.com"
+                    className="w-full bg-slate-50 border-none rounded-2xl px-6 py-4 focus:ring-2 focus:ring-primary/20 transition-all outline-none text-[#01111E]"
+                  />
+                </div>
+                <div>
+                  <label
+                    htmlFor="Phnumber"
+                    className="block text-sm font-bold text-[#01111E] mb-2 px-1"
+                  >
+                    Phone Number
+                  </label>
+                  <input
+                    id="Phnumber"
+                    type="tel"
+                    name="phnumber"
+                    value={formData.phnumber}
+                    onChange={handleChange}
+                    placeholder="+1 234..."
+                    className="w-full bg-slate-50 border-none rounded-2xl px-6 py-4 focus:ring-2 focus:ring-primary/20 transition-all outline-none text-[#01111E]"
+                  />
+                </div>
+              </div>
+
+              <div>
                 <label
-                  htmlFor='Phnumber'
-                  className='pb-3 inline-block text-base'>
-                  Phone Number
+                  htmlFor="message"
+                  className="block text-sm font-bold text-[#01111E] mb-2 px-1"
+                >
+                  Your Message
                 </label>
-                <input
-                  id='Phnumber'
-                  type='tel'
-                  name='phnumber'
-                  placeholder='+1234567890'
-                  value={formData.phnumber}
+                <textarea
+                  id="message"
+                  name="Message"
+                  rows={4}
+                  value={formData.Message}
                   onChange={handleChange}
-                  className='w-full text-base px-4 rounded-2xl py-2.5 border-solid border transition-all duration-500 focus:border-primary focus:outline-0'
+                  placeholder="How can we help you?"
+                  className="w-full bg-slate-50 border-none rounded-2xl px-6 py-4 focus:ring-2 focus:ring-primary/20 transition-all outline-none text-[#01111E] resize-none"
                 />
               </div>
-            </div>
-            <div className='w-full mx-0 my-2.5 flex-1'>
-              <label htmlFor='message' className='text-base inline-block'>
-                Message
-              </label>
-              <textarea
-                id='message'
-                name='Message'
-                value={formData.Message}
-                onChange={handleChange}
-                className='w-full mt-2 rounded-2xl px-5 py-3 border-solid border transition-all duration-500 focus:border-primary focus:outline-0'
-                placeholder='Anything else you wanna communicate'></textarea>
-            </div>
-            <div className='mx-0 my-2.5 w-full'>
+
               <button
-                type='submit'
+                type="submit"
                 disabled={!isFormValid || loader}
-                className={`border leading-none px-6 text-lg font-medium py-4 rounded-full 
-                    ${
-                      !isFormValid || loader
-                        ? 'bg-gray-300 text-gray-500 cursor-not-allowed'
-                        : 'bg-primary border-primary text-white hover:bg-transparent hover:text-primary cursor-pointer'
-                    }`}>
-                Submit
+                className={`w-full py-5 rounded-2xl font-bold text-lg transition-all duration-300 shadow-xl ${
+                  !isFormValid || loader
+                    ? "bg-slate-100 text-slate-400 cursor-not-allowed shadow-none"
+                    : "bg-[#01111E] text-white hover:bg-primary shadow-primary/20"
+                }`}
+              >
+                {loader ? "Sending Message..." : "Send Message"}
               </button>
-            </div>
-          </form>
-          {showThanks && (
-            <div className='text-white bg-primary rounded-full px-4 text-lg mb-4.5 mt-1 absolute flex items-center gap-2'>
-              Thank you for contacting us! We will get back to you soon.
-              <div className='w-3 h-3 rounded-full animate-spin border-2 border-solid border-white border-t-transparent'></div>
-            </div>
-          )}
+            </form>
+
+            {/* Success Toast */}
+            {showThanks && (
+              <div className="absolute inset-0 bg-white/90 backdrop-blur-sm rounded-[2.5rem] z-20 flex flex-col items-center justify-center text-center p-12 animate-in fade-in zoom-in duration-300">
+                <div className="w-20 h-20 bg-green-500 text-white rounded-full flex items-center justify-center mb-6 shadow-lg shadow-green-200">
+                  <Icon icon="tabler:check" className="text-4xl" />
+                </div>
+                <h3 className="text-3xl font-bold text-[#01111E] mb-2">
+                  Message Sent!
+                </h3>
+                <p className="text-black/50">
+                  We&apos;ll get back to you within 24 hours.
+                </p>
+              </div>
+            )}
+          </div>
         </div>
       </div>
     </section>
-  )
-}
+  );
+};
 
-export default ContactForm
+export default ContactForm;

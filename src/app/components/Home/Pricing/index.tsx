@@ -1,150 +1,140 @@
-'use client'
-import { SetStateAction, useEffect, useState } from 'react'
-import Image from 'next/image'
-import { Icon } from '@iconify/react/dist/iconify.js'
-import { plansData } from '@/app/types/plans'
-import PlansSkeleton from '@/app/Skeleton/Plans'
+"use client";
+import { Icon } from "@iconify/react/dist/iconify.js";
 
 const Pricing = () => {
-  const [plans, setPlans] = useState<plansData[]>([])
-  const [loading, setLoading] = useState(true)
-
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const res = await fetch('/api/data')
-        if (!res.ok) throw new Error('Failed to fetch')
-        const data = await res.json()
-        setPlans(data.PlansData)
-      } catch (error) {
-        console.error('Error fetching services:', error)
-      } finally {
-        setLoading(false)
-      }
-    }
-    fetchData()
-  }, [])
-
-  const [selectedCategory, setSelectedCategory] = useState<
-    'monthly' | 'yearly'
-  >('yearly')
-
-  const handleCategoryChange = (
-    category: SetStateAction<'monthly' | 'yearly'>
-  ) => {
-    setSelectedCategory(category)
-  }
-
-  const filteredData = plans.filter((item) =>
-    item.category.includes(selectedCategory)
-  )
+  const rates = [
+    {
+      title: "Standard Route",
+      desc: "Ideal for alerts and notifications.",
+      price: "8.43",
+      type: "Alphanumeric",
+      note: "DND may apply",
+      features: ["All Operators", "Basic Support", "Instant Delivery"],
+    },
+    {
+      title: "Premium Brand",
+      desc: "High priority for marketing & OTPs.",
+      price: "10.43",
+      type: "Template/Brand",
+      note: "High throughput",
+      popular: true,
+      features: [
+        "Verified Sender ID",
+        "Priority Routing",
+        "Whitelisted Delivery",
+      ],
+    },
+    {
+      title: "Enterprise Gold",
+      desc: "The gold standard for high-stakes messaging.",
+      price: "500.00",
+      type: "Exclusive Route",
+      note: "Premium route quality",
+      features: ["Dedicated Support", "Global Coverage", "Zero Latency"],
+    },
+  ];
 
   return (
-    <section id='pricing' className='bg-header relative py-20'>
-      <Image
-        src='/images/pricing/upperline.png'
-        alt='upperline-image'
-        width={280}
-        height={219}
-        className='absolute top-[160px] left-[90px] hidden sm:block opacity-5'
-      />
-      <Image
-        src='/images/pricing/lowerline.png'
-        alt='lowerline-image'
-        width={180}
-        height={100}
-        className='absolute bottom-[0px] right-[90px] opacity-5'
-      />
-      <div className='container px-4'>
-        <h2 className='text-center'>Our Pricing Plan.</h2>
+    <section
+      id="pricing"
+      className="py-24 lg:py-32 bg-[#F8FAFC] relative overflow-hidden"
+    >
+      {/* Dynamic Background Blurs for 'Beauty' */}
+      <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-primary/5 rounded-full blur-[120px] -mr-64 -mt-64" />
+      <div className="absolute bottom-0 left-0 w-[500px] h-[500px] bg-primary/5 rounded-full blur-[120px] -ml-64 -mb-64" />
 
-        <p className='text-lg font-normal text-center text-black/60 pt-5 max-w-2xl mx-auto'>
-          Simple, transparent, and built to scale with your needs. Choose the plan that fits your lifestyle — no hidden fees, ever.
-        </p>
-
-        {/* Yearly/Monthly Toggle Buttons */}
-        <div className='mt-6 relative'>
-          <div className='flex justify-center'>
-            <div className='bg-deepSlate flex py-1 px-1 rounded-full'>
-              <button
-                className={`text-xl font-medium cursor-pointer ${
-                  selectedCategory === 'yearly'
-                    ? 'text-primary bg-white rounded-full py-2 px-4 sm:py-4 sm:px-16'
-                    : 'text-white py-2 px-4 sm:py-4 sm:px-16'
-                }`}
-                onClick={() => handleCategoryChange('yearly')}>
-                Yearly
-              </button>
-              <button
-                className={`text-xl font-medium cursor-pointer ${
-                  selectedCategory === 'monthly'
-                    ? 'text-primary bg-white rounded-full py-2 px-4 sm:py-4 sm:px-16'
-                    : 'text-white py-2 px-4 sm:py-4 sm:px-16'
-                }`}
-                onClick={() => handleCategoryChange('monthly')}>
-                Monthly
-              </button>
-            </div>
-          </div>
+      <div className="container mx-auto px-6 relative z-10">
+        {/* Minimalist Header */}
+        <div className="max-w-3xl mb-20">
+          <h4 className="text-primary font-bold tracking-widest uppercase text-sm mb-4">
+            Pricing Strategy
+          </h4>
+          <h2 className="text-5xl lg:text-7xl font-black text-[#01111E] leading-tight tracking-tighter mb-8">
+            Simple rates. <br />
+            <span className="text-black/20">No surprises.</span>
+          </h2>
+          <p className="text-xl text-black/50 max-w-xl leading-relaxed">
+            Ocean Bridge scales with you. From a few hundred texts to millions,
+            our pricing remains transparent and competitive.
+          </p>
         </div>
 
-        <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 my-16 mx-5 gap-6'>
-          {loading
-            ? Array.from({ length: 3 }).map((_, i) => <PlansSkeleton key={i} />)
-            : filteredData.map((item, index) => (
-                <div
-                  className='pt-10 pb-28 px-10 bg-white rounded-2xl shadow-lg relative hover:bg-primary group overflow-hidden'
-                  key={index}>
-                  <Image
-                    src={item.imgSrc}
-                    alt='star-image'
-                    width={154}
-                    height={154}
-                    className='absolute bottom-[-4%] right-[-6%] opacity-10'
-                  />
-                  <h3 className='mb-8 text-midnight_text group-hover:text-white'>
-                    {item.heading}
-                  </h3>
-                  <button className='text-xl font-medium text-white w-full bg-primary hover:text-white group-hover:bg-deepSlate group-hover:border-deepSlate border-2 border-primary rounded-full py-4 px-12 mb-8 hover:cursor-pointer'>
-                    {item.button}
-                  </button>
-                  <p className='text-4xl sm:text-5xl font-semibold text-midnight_text mb-3 group-hover:text-white'>
-                    $
-                    {selectedCategory === 'monthly'
-                      ? item.price.monthly
-                      : item.price.yearly}
-                    <span className='text-lightgrey text-3xl sm:text-4xl'>
-                      {selectedCategory === 'monthly' ? '/mo' : '/yr'}
-                    </span>
-                  </p>
-                  <p className='text-lg font-normal text-black group-hover:text-white'>
-                    ${item.subscriber}
-                    <span>/ Subscriber</span>
-                  </p>
-                  <p className='text-lg font-normal text-black/40 mb-6 group-hover:text-white'>
-                    (per subscriber per month)
-                  </p>
+        {/* Pricing Cards Grid */}
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+          {rates.map((rate, i) => (
+            <div
+              key={i}
+              className={`relative p-10 rounded-[2.5rem] transition-all duration-500 bg-white border ${
+                rate.popular
+                  ? "border-primary shadow-2xl scale-105 z-20"
+                  : "border-black/5 hover:border-black/10 shadow-xl shadow-black/[0.02]"
+              }`}
+            >
+              {rate.popular && (
+                <span className="absolute -top-4 left-1/2 -translate-x-1/2 bg-primary text-white px-6 py-1 rounded-full text-sm font-bold tracking-wide shadow-lg shadow-primary/30">
+                  MOST POPULAR
+                </span>
+              )}
 
-                  {/* Plan Features with icons */}
-                  <div className='mt-6'>
-                    {item.option.map((feature, idx) => (
-                      <div key={idx} className='flex gap-4 pt-4'>
-                        <Icon
-                          icon='tabler:circle-check-filled'
-                          className='text-2xl text-emerald-400'
-                        />
-                        <p className='text-lg font-medium text-black/60 group-hover:text-white/60'>
-                          {feature}
-                        </p>
-                      </div>
-                    ))}
+              <div className="mb-8">
+                <h3 className="text-2xl font-bold text-[#01111E] mb-2">
+                  {rate.title}
+                </h3>
+                <p className="text-black/40 text-sm leading-relaxed">
+                  {rate.desc}
+                </p>
+              </div>
+
+              <div className="flex items-baseline gap-1 mb-8">
+                <span className="text-lg font-bold text-[#01111E]">₦</span>
+                <span className="text-5xl font-black text-[#01111E] tracking-tighter">
+                  {rate.price}
+                </span>
+                <span className="text-black/30 font-medium">/sms</span>
+              </div>
+
+              <div className="space-y-4 mb-10">
+                {rate.features.map((feature, idx) => (
+                  <div key={idx} className="flex items-center gap-3">
+                    <div className="flex-shrink-0 w-5 h-5 rounded-full bg-primary/10 flex items-center justify-center">
+                      <Icon
+                        icon="tabler:check"
+                        className="text-primary text-xs"
+                      />
+                    </div>
+                    <span className="text-black/60 text-sm font-medium">
+                      {feature}
+                    </span>
                   </div>
+                ))}
+              </div>
+
+              <div className="pt-8 border-t border-black/5">
+                <div className="flex items-center justify-between text-xs font-bold text-black/30 uppercase tracking-widest mb-6">
+                  <span>Sender ID:</span>
+                  <span className="text-[#01111E]">{rate.type}</span>
                 </div>
-              ))}
+
+                <button
+                  className={`w-full py-4 rounded-2xl font-bold transition-all duration-300 ${
+                    rate.popular
+                      ? "bg-primary text-white hover:bg-[#01111E] shadow-xl shadow-primary/20"
+                      : "bg-slate-100 text-[#01111E] hover:bg-[#01111E] hover:text-white"
+                  }`}
+                >
+                  Choose Plan
+                </button>
+              </div>
+
+              <p className="text-center text-[10px] text-black/20 mt-4 uppercase tracking-tighter">
+                * {rate.note}
+              </p>
+            </div>
+          ))}
         </div>
       </div>
     </section>
-  )
-}
+  );
+};
 
-export default Pricing
+export default Pricing;

@@ -1,75 +1,93 @@
-'use client'
+"use client";
 
-import Image from 'next/image'
-import Link from 'next/link'
-import { Icon } from '@iconify/react/dist/iconify.js'
-import { useEffect, useState } from 'react'
-import { featureData } from '@/app/types/featuredata'
-import FeatureSkeleton from '@/app/Skeleton/Features'
+import Image from "next/image";
+import { useEffect, useState } from "react";
+import { featureData } from "@/app/types/featuredata";
+import FeatureSkeleton from "@/app/Skeleton/Features";
 
 const Features = () => {
-  const [features, setFeatures] = useState<featureData[]>([])
-  const [loading, setLoading] = useState(true)
+  const [features, setFeatures] = useState<featureData[]>([]);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const res = await fetch('/api/data')
-        if (!res.ok) throw new Error('Failed to fetch')
-        const data = await res.json()
-        setFeatures(data.FeatureData)
+        const res = await fetch("/api/data");
+        if (!res.ok) throw new Error("Failed to fetch");
+        const data = await res.json();
+        setFeatures(data.FeatureData);
       } catch (error) {
-        console.error('Error fetching services:', error)
+        console.error("Error fetching services:", error);
       } finally {
-        setLoading(false)
+        setLoading(false);
       }
-    }
-    fetchData()
-  }, [])
+    };
+    fetchData();
+  }, []);
 
   return (
-    <section id='features'>
-      <div className='container'>
-        <h2 className='text-midnight_text text-center mb-5 max-w-xl mx-auto sm:leading-16'>
-          Everything You Need. Built In.
-        </h2>
-        <p className='text-black/60 text-lg text-center md:max-w-[60%] mx-auto'>
-          Stay on top of your spending, bills, and cards — all from one place.
-          PaidIn helps you manage your money with clarity, control, and zero
-          hassle.
-        </p>
-        <div className='grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 mt-10'>
+    <section id="features" className="py-24 lg:py-40 bg-white">
+      <div className="container mx-auto px-6">
+        {/* Simplified Header */}
+        <div className="flex flex-col lg:flex-row lg:items-end justify-between gap-8 mb-20">
+          <div className="max-w-2xl">
+            <h2 className="text-5xl lg:text-7xl font-bold text-[#01111E] leading-[1.1] tracking-tighter">
+              Global reach. <br />
+              <span className="text-black/20">Local rules.</span>
+            </h2>
+          </div>
+          <div className="max-w-md">
+            <p className="text-xl text-black/50 leading-relaxed">
+              Scale your messaging across borders without the compliance
+              headache. Real-time sender ID validation built-in.
+            </p>
+          </div>
+        </div>
+
+        {/* The "Minimalist" Grid */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 border-t border-l border-black/[0.08]">
           {loading
             ? Array.from({ length: 3 }).map((_, i) => (
-                <FeatureSkeleton key={i} />
+                <div
+                  key={i}
+                  className="p-12 border-r border-b border-black/[0.08]"
+                >
+                  <FeatureSkeleton />
+                </div>
               ))
             : features.map((item, i) => (
-                <div key={i} className='bg-white rounded-2xl p-5 shadow-lg'>
-                  <Image
-                    src={item.imgSrc}
-                    alt={item.imgSrc}
-                    width={55}
-                    height={55}
-                    className='mb-2'
-                  />
-                  <h3 className='text-2xl font-semibold text-black mt-5'>
-                    {item.heading}
-                  </h3>
-                  <p className='text-lg text-black/50 my-2 leading-6'>
-                    {item.paragraph}
-                  </p>
-                  <Link
-                    href={'/'}
-                    className='text-primary hover:text-blue-700 text-xl font-medium flex items-center gap-2 mt-6 pb-2'>
-                    Learn more
-                    <Icon icon='tabler:arrow-right' className='text-2xl' />
-                  </Link>
+                <div
+                  key={i}
+                  className="group relative p-12 border-r border-b border-black/[0.08] transition-colors duration-500 hover:bg-slate-50/50"
+                >
+                  {/* Subtle Gradient Hover Backdrop */}
+                  <div className="absolute inset-0 bg-gradient-to-br from-primary/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-700" />
+
+                  <div className="relative z-10">
+                    <div className="mb-10 inline-block">
+                      <Image
+                        src={item.imgSrc}
+                        alt={item.heading}
+                        width={48}
+                        height={48}
+                        className="opacity-80 group-hover:opacity-100 group-hover:scale-110 transition-all duration-500 grayscale group-hover:grayscale-0"
+                      />
+                    </div>
+
+                    <h3 className="text-2xl font-bold text-[#01111E] mb-4">
+                      {item.heading}
+                    </h3>
+
+                    <p className="text-black/40 text-lg leading-relaxed group-hover:text-black/70 transition-colors duration-500">
+                      {item.paragraph}
+                    </p>
+                  </div>
                 </div>
               ))}
         </div>
       </div>
     </section>
-  )
-}
+  );
+};
 
-export default Features
+export default Features;

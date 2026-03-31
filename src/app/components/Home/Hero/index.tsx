@@ -1,66 +1,53 @@
-import Image from 'next/image'
-import Link from 'next/link'
+import Image from "next/image";
 
 const Banner = () => {
   return (
-    <section className='bg-header pt-28 lg:pb-14 overflow-hidden'>
-      <div className='container'>
-        <div className='grid gap-5 grid-cols-1 lg:grid-cols-12 content-center'>
-          <div className='lg:col-span-7 flex flex-col justify-center relative'>
+    <section className="bg-header pt-20 lg:pt-32 pb-14 lg:pb-24 overflow-hidden min-h-screen flex items-center">
+      <div className="container mx-auto px-4 md:px-6">
+        <div className="grid gap-12 lg:grid-cols-12 items-center">
+          {/* LEFT SIDE: Text Content */}
+          <div className="order-2 lg:order-1 lg:col-span-7 flex flex-col justify-center relative z-10">
+            {/* Decorative Icon */}
             <Image
-              src='/images/hero/star.svg'
-              alt='star-image'
+              src="/images/hero/star.svg"
+              alt="star"
               width={95}
               height={97}
-              className='absolute top-[-74px] right-[51px] opacity-10'
+              className="absolute -top-10 left-0 opacity-10 -z-10 animate-pulse"
             />
-            <Image
-              src='/images/hero/lineone.svg'
-              alt='line-image'
-              width={190}
-              height={148}
-              className='absolute top-[-74px] right-[51px] opacity-5'
-            />
-            <Image
-              src='/images/hero/linetwo.svg'
-              alt='line-image'
-              width={190}
-              height={148}
-              className='hidden xl:block absolute bottom-[-74px] right-[-38rem] opacity-5'
-            />
-            <div className='flex flex-col gap-5'>
-              <h1 className='text-6xl max-w-2xl leading-16 text-midnight_text text-center lg:text-start mx-auto lg:mx-0 pt-5'>
-                Smarter Spending Starts Here.
+
+            <div className="flex flex-col gap-6 text-center lg:text-left">
+              <h1 className="text-4xl md:text-5xl lg:text-7xl font-extrabold leading-tight text-midnight_text">
+                Smarter Reach <br className="hidden md:block" /> Starts Here.
               </h1>
-              <p className='text-black/75 text-lg font-normal text-center lg:text-start max-w-lg mx-auto lg:mx-0'>
-                Track your expenses, manage your cards, and never miss a bill —
-                all in one powerful, intuitive app. With PaidIn, your money
-                works for you.
+              <p className="text-black/75 text-lg md:text-xl font-normal max-w-lg mx-auto lg:mx-0">
+                Reach thousands of customers instantly, track your ROI, and
+                manage campaigns in one intuitive platform. With{" "}
+                <strong>Ocean Bridge</strong>, your budget works harder.
               </p>
-              <div className='mx-auto lg:mx-0'>
-                <Link href={'/#pricing'}>
-                  <button className='text-white text-xl font-medium py-4 px-8 rounded-full transition duration-300 border border-primary bg-primary hover:bg-transparent hover:cursor-pointer hover:text-primary'>
-                    Get started
-                  </button>
-                </Link>
-              </div>
             </div>
           </div>
-          <div className='mt-10 lg:mt-0 lg:col-span-5'>
-            <div>
+
+          {/* RIGHT SIDE: Image Content */}
+          <div className="order-1 lg:order-2 lg:col-span-5 flex justify-center lg:justify-end items-center">
+            <div className="relative w-full max-w-[500px] lg:max-w-full">
+              {/* Subtle Glow/Shadow behind image for "Brilliance" */}
+              <div className="absolute inset-0 bg-primary/10 blur-3xl rounded-full -z-10 transform scale-75"></div>
+
               <Image
-                src='/images/hero/banner.webp'
-                alt='nothing'
-                width={698}
-                height={652}
-                className='w-full'
+                src="/images/hero/banner-002.png"
+                alt="Ocean Bridge Bulk SMS Dashboard"
+                width={700}
+                height={650}
+                priority
+                className="w-full h-auto object-contain drop-shadow-2xl transform lg:hover:rotate-2 transition-transform duration-700 ease-in-out"
               />
             </div>
           </div>
         </div>
       </div>
     </section>
-  )
-}
+  );
+};
 
-export default Banner
+export default Banner;
