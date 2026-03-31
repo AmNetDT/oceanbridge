@@ -42,15 +42,7 @@ const Footer = () => {
   return (
     // UPDATED: Changed bg-midnight_text to a rich, dark cyan gradient matched to logo tone.
     // Added an inline style for the subtle wave pattern.
-    <div
-      className="bg-[#01111E] bg-gradient-to-br from-[#021d33] to-[#01111E] border-t border-t-white/10"
-      style={{
-        backgroundImage: 'url("/images/footer/wave-pattern.svg")',
-        backgroundSize: "600px auto",
-        backgroundRepeat: "no-repeat",
-        backgroundPosition: "right center",
-      }}
-    >
+    <div className="bg-[#01111E] bg-gradient-to-br from-[#021d33] to-[#01111E] border-t border-t-white/10">
       {/* Constraints are set to xl max-width for premium spacing */}
       <div className="mx-auto max-w-7xl pt-16 px-4 sm:px-6 lg:px-8 pb-10">
         {/* MAIN FOOTER GRID: Structure is simplified for clean mobile stacking */}
