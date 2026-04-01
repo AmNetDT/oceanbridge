@@ -1,115 +1,157 @@
-'use client'
-import Link from 'next/link'
-import { useRouter } from 'next/navigation'
-import toast from 'react-hot-toast'
-import SocialSignUp from '../SocialSignUp'
-import Logo from '@/app/components/Layout/Header/Logo'
-import { useState } from 'react'
-import Loader from '@/app/components/Common/Loader'
+"use client";
+
+import Link from "next/link";
+import { useRouter } from "next/navigation";
+import { useState } from "react";
+import toast from "react-hot-toast";
+import Logo from "@/app/components/Layout/Header/Logo";
+import Loader from "@/app/components/Common/Loader";
+
 const SignUp = () => {
-  const router = useRouter()
-  const [loading, setLoading] = useState(false)
+  const router = useRouter();
+  const [loading, setLoading] = useState(false);
 
-  const handleSubmit = (e: any) => {
-    e.preventDefault()
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    setLoading(true);
 
-    setLoading(true)
-    const data = new FormData(e.currentTarget)
-    const value = Object.fromEntries(data.entries())
-    const finalData = { ...value }
+    const formData = new FormData(e.currentTarget);
+    const payload = Object.fromEntries(formData.entries());
 
-    fetch('/api/register', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(finalData),
-    })
-      .then((res) => res.json())
-      .then((data) => {
-        toast.success('Successfully registered')
-        setLoading(false)
-        router.push('/signin')
-      })
-      .catch((err) => {
-        toast.error(err.message)
-        setLoading(false)
-      })
-  }
+    try {
+      const res = await fetch("/api/register", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload),
+      });
+
+      const result = await res.json();
+
+      if (!res.ok) {
+        throw new Error(result.message || "Registration failed");
+      }
+
+      toast.success("Account created successfully!");
+      router.push("/signin");
+    } catch (err: any) {
+      toast.error(err.message);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   return (
-    <>
-      <div className='mb-10 text-center mx-auto inline-block max-w-[160px]'>
-        <Logo />
+    <div className="w-full max-w-md mx-auto">
+      {/* Header & Logo */}
+      <div className="flex flex-col items-center mb-8">
+        <div className="mb-6 transform hover:scale-105 transition-transform duration-300">
+          <Logo />
+        </div>
+        <h2 className="text-2xl font-bold text-gray-900 dark:text-white">
+          Create an account
+        </h2>
+        <p className="text-sm text-gray-500 mt-2">
+          Join us and start your journey today
+        </p>
       </div>
 
-      <SocialSignUp />
+      {/* <SocialSignUp /> */}
 
-      <span
-        className="relative my-8 block text-center z-1 
-  before:content-[''] before:absolute before:left-0 before:top-3 before:h-px before:w-[40%] before:bg-black/20 
-  after:content-[''] after:absolute after:right-0 after:top-3 after:h-px after:w-[40%] after:bg-black/20">
-        <span className='relative z-10 inline-block px-3 text-base text-black text-body-secondary'>
-          OR
-        </span>
-      </span>
+      {/* Divider */}
 
-      <form onSubmit={handleSubmit}>
-        <div className='mb-[22px]'>
+      <form onSubmit={handleSubmit} className="space-y-5">
+        {/* Name Input */}
+        <div>
+          <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1.5 ml-1">
+            Full Name
+          </label>
           <input
-            type='text'
-            placeholder='Name'
-            name='name'
+            type="text"
+            name="name"
             required
-            className='w-full rounded-md border border-solid bg-transparent px-5 py-3 text-base text-dark outline-hidden transition border-gray-200 placeholder:text-black/30 focus:border-primary text-black focus-visible:shadow-none'
+            placeholder="John Doe"
+            className="w-full rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800/50 px-4 py-3 text-gray-900 dark:text-white outline-none transition-all focus:ring-2 focus:ring-primary/20 focus:border-primary placeholder:text-gray-400"
           />
         </div>
-        <div className='mb-[22px]'>
+
+        {/* Email Input */}
+        <div>
+          <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1.5 ml-1">
+            Email Address
+          </label>
           <input
-            type='email'
-            placeholder='Email'
-            name='email'
+            type="email"
+            name="email"
             required
-            className='w-full rounded-md border border-solid bg-transparent px-5 py-3 text-base text-dark outline-hidden transition border-gray-200 placeholder:text-black/30 focus:border-primary text-black focus-visible:shadow-none'
+            placeholder="name@company.com"
+            className="w-full rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800/50 px-4 py-3 text-gray-900 dark:text-white outline-none transition-all focus:ring-2 focus:ring-primary/20 focus:border-primary placeholder:text-gray-400"
           />
         </div>
-        <div className='mb-[22px]'>
+
+        {/* Password Input */}
+        <div>
+          <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1.5 ml-1">
+            Password
+          </label>
           <input
-            type='password'
-            placeholder='Password'
-            name='password'
+            type="password"
+            name="password"
             required
-            className='w-full rounded-md border border-solid bg-transparent px-5 py-3 text-base text-dark outline-hidden transition border-gray-200 placeholder:text-black/30 focus:border-primary text-black focus-visible:shadow-none'
+            placeholder="••••••••"
+            className="w-full rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800/50 px-4 py-3 text-gray-900 dark:text-white outline-none transition-all focus:ring-2 focus:ring-primary/20 focus:border-primary placeholder:text-gray-400"
           />
         </div>
-        <div className='mb-9'>
-          <button
-            type='submit'
-            className='flex w-full items-center text-18 font-medium justify-center text-white rounded-md bg-primary px-5 py-3 transition duration-300 ease-in-out hover:bg-transparent hover:text-primary border-primary border hover:cursor-pointer'>
-            Sign Up {loading && <Loader />}
-          </button>
-        </div>
+
+        {/* Submit Button */}
+        <button
+          disabled={loading}
+          type="submit"
+          className="relative flex items-center justify-center w-full py-3.5 px-4 rounded-xl bg-primary text-white font-bold text-base shadow-lg shadow-primary/20 hover:shadow-primary/40 active:scale-[0.98] transition-all disabled:opacity-70 disabled:cursor-not-allowed overflow-hidden group"
+        >
+          <span
+            className={`${loading ? "opacity-0" : "opacity-100"} transition-opacity`}
+          >
+            Create Account
+          </span>
+          {loading && (
+            <div className="absolute inset-0 flex items-center justify-center">
+              <Loader />
+            </div>
+          )}
+        </button>
       </form>
 
-      <p className='text-body-secondary mb-4 text-black text-base'>
-        By creating an account you are agree with our{' '}
-        <Link href='/#' className='text-primary hover:underline'>
-          Privacy
-        </Link>{' '}
-        and{' '}
-        <Link href='/#' className='text-primary hover:underline'>
-          Policy
-        </Link>
-      </p>
+      {/* Footer Links */}
+      <div className="mt-8 space-y-4 text-center">
+        <p className="text-xs text-gray-500 dark:text-gray-400 leading-relaxed px-4">
+          By creating an account, you agree to our{" "}
+          <Link
+            href="/privacy"
+            className="text-primary font-semibold hover:underline"
+          >
+            Privacy Policy
+          </Link>{" "}
+          and{" "}
+          <Link
+            href="/terms"
+            className="text-primary font-semibold hover:underline"
+          >
+            Terms of Service
+          </Link>
+        </p>
 
-      <p className='text-body-secondary text-black text-base'>
-        Already have an account?
-        <Link href='/' className='pl-2 text-primary hover:underline'>
-          Sign In
-        </Link>
-      </p>
-    </>
-  )
-}
+        <p className="text-gray-600 dark:text-gray-400 text-sm">
+          Already have an account?{" "}
+          <Link
+            href="/signin"
+            className="font-bold text-primary hover:underline underline-offset-4"
+          >
+            Sign In
+          </Link>
+        </p>
+      </div>
+    </div>
+  );
+};
 
-export default SignUp
+export default SignUp;

@@ -1,110 +1,135 @@
-'use client'
-import { signIn } from 'next-auth/react'
-import Link from 'next/link'
-import { useRouter } from 'next/navigation'
-import { useState } from 'react'
-import toast from 'react-hot-toast'
-import SocialSignIn from '../SocialSignIn'
-import Logo from '@/app/components/Layout/Header/Logo'
-import Loader from '@/app/components/Common/Loader'
+"use client";
+import { signIn } from "next-auth/react";
+import Link from "next/link";
+import { useRouter } from "next/navigation";
+import { useState } from "react";
+import toast from "react-hot-toast";
+import Logo from "@/app/components/Layout/Header/Logo";
+import Loader from "@/app/components/Common/Loader";
 
 const Signin = () => {
-  const router = useRouter()
-
+  const router = useRouter();
   const [loginData, setLoginData] = useState({
-    email: '',
-    password: '',
-    checkboxToggle: false,
-  })
-  const [loading, setLoading] = useState(false)
+    email: "",
+    password: "",
+  });
+  const [loading, setLoading] = useState(false);
 
-  const loginUser = (e: any) => {
-    e.preventDefault()
+  const loginUser = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setLoading(true);
 
-    setLoading(true)
-    signIn('credentials', { ...loginData, redirect: false })
-      .then((callback) => {
-        if (callback?.error) {
-          toast.error(callback?.error)
-          console.log(callback?.error)
-          setLoading(false)
-          return
-        }
+    try {
+      const callback = await signIn("credentials", {
+        ...loginData,
+        redirect: false,
+      });
 
-        if (callback?.ok && !callback?.error) {
-          toast.success('Login successful')
-          setLoading(false)
-          router.push('/')
-        }
-      })
-      .catch((err) => {
-        setLoading(false)
-        console.log(err.message)
-        toast.error(err.message)
-      })
-  }
+      if (callback?.error) {
+        toast.error(callback.error);
+        setLoading(false);
+      } else if (callback?.ok) {
+        toast.success("Welcome back!");
+        router.push("/");
+      }
+    } catch (err: any) {
+      setLoading(false);
+      toast.error("An unexpected error occurred.");
+    }
+  };
 
   return (
-    <>
-      <div className='mb-10 text-center mx-auto inline-block max-w-[160px]'>
-        <Logo />
+    <div className="w-full max-w-md mx-auto">
+      {/* Header & Logo */}
+      <div className="flex flex-col items-center mb-8">
+        <div className="mb-6 transform hover:scale-105 transition-transform duration-300">
+          <Logo />
+        </div>
+        <h2 className="text-2xl font-bold text-gray-900 dark:text-white">
+          Sign in to your account
+        </h2>
+        <p className="text-sm text-gray-500 mt-2">
+          Enter your details below to continue
+        </p>
       </div>
 
-      <SocialSignIn />
+      {/* Social Sign In placeholder - keeping your logic purpose */}
+      {/* <SocialSignIn /> */}
 
-      <span
-        className="relative my-8 block text-center z-1 
-  before:content-[''] before:absolute before:left-0 before:top-3 before:h-px before:w-[40%] before:bg-black/20 
-  after:content-[''] after:absolute after:right-0 after:top-3 after:h-px after:w-[40%] after:bg-black/20">
-        <span className='relative z-10 inline-block px-3 text-base text-black text-body-secondary'>
-          OR
-        </span>
-      </span>
+      {/* Divider */}
 
-      <form onSubmit={(e) => e.preventDefault()}>
-        <div className='mb-[22px]'>
+      <form onSubmit={loginUser} className="space-y-5">
+        <div>
+          <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1.5 ml-1">
+            Email Address
+          </label>
           <input
-            type='email'
-            placeholder='Email'
+            type="email"
+            required
+            placeholder="name@company.com"
+            value={loginData.email}
             onChange={(e) =>
               setLoginData({ ...loginData, email: e.target.value })
             }
-            className='w-full rounded-md border border-solid bg-transparent px-5 py-3 text-base text-dark outline-hidden transition border-gray-200 placeholder:text-black/30 focus:border-primary focus-visible:shadow-none text-black'
+            className="w-full rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800/50 px-4 py-3 text-gray-900 dark:text-white outline-none transition-all focus:ring-2 focus:ring-primary/20 focus:border-primary"
           />
         </div>
-        <div className='mb-[22px]'>
+
+        <div>
+          <div className="flex justify-between mb-1.5 ml-1">
+            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">
+              Password
+            </label>
+            <Link
+              href="/forgot-password"
+              className="text-sm font-semibold text-primary hover:text-primary/80 transition-colors"
+            >
+              Forgot?
+            </Link>
+          </div>
           <input
-            type='password'
-            placeholder='Password'
+            type="password"
+            required
+            placeholder="••••••••"
+            value={loginData.password}
             onChange={(e) =>
               setLoginData({ ...loginData, password: e.target.value })
             }
-            className='w-full rounded-md border border-solid bg-transparent px-5 py-3 text-base text-dark outline-hidden transition border-gray-200 placeholder:text-black/30 focus:border-primary text-black focus-visible:shadow-none'
+            className="w-full rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800/50 px-4 py-3 text-gray-900 dark:text-white outline-none transition-all focus:ring-2 focus:ring-primary/20 focus:border-primary"
           />
         </div>
-        <div className='mb-9'>
-          <button
-            onClick={loginUser}
-            type='submit'
-            className='bg-primary w-full py-3 rounded-lg text-18 font-medium transition duration-300 ease-in-out border text-white border-primary hover:text-primary hover:bg-transparent hover:cursor-pointer'>
-            Sign In {loading && <Loader />}
-          </button>
-        </div>
+
+        <button
+          disabled={loading}
+          type="submit"
+          className="relative flex items-center justify-center w-full py-3.5 px-4 rounded-xl bg-primary text-white font-bold text-base shadow-lg shadow-primary/20 hover:shadow-primary/40 active:scale-[0.98] transition-all disabled:opacity-70 disabled:cursor-not-allowed overflow-hidden group"
+        >
+          <span
+            className={`${loading ? "opacity-0" : "opacity-100"} transition-opacity`}
+          >
+            Sign In
+          </span>
+          {loading && (
+            <div className="absolute inset-0 flex items-center justify-center">
+              <Loader />
+            </div>
+          )}
+        </button>
       </form>
 
-      <Link
-        href='/'
-        className='mb-2 inline-block text-base text-dark hover:text-primary text-primary dark:hover:text-primary'>
-        Forgot Password?
-      </Link>
-      <p className='text-body-secondary text-black text-base'>
-        Not a member yet?{' '}
-        <Link href='/' className='text-primary hover:underline'>
-          Sign Up
-        </Link>
-      </p>
-    </>
-  )
-}
+      <div className="mt-8 text-center">
+        <p className="text-gray-600 dark:text-gray-400">
+          Don not have an account?{" "}
+          <Link
+            href="/signup"
+            className="font-bold text-primary hover:underline underline-offset-4"
+          >
+            Create one free
+          </Link>
+        </p>
+      </div>
+    </div>
+  );
+};
 
-export default Signin
+export default Signin;

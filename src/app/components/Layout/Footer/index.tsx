@@ -69,7 +69,7 @@ const Footer = () => {
                 <div key={i}>
                   <Link
                     href="/"
-                    className="text-lg md:text-xl font-medium text-white/90 hover:text-[#00cfff] flex items-center justify-center lg:justify-start transition duration-300"
+                    className="text-base font-normal text-white/90 hover:text-[#00cfff] flex items-center justify-center lg:justify-start transition duration-300"
                   >
                     {items.link}
                   </Link>
@@ -84,8 +84,8 @@ const Footer = () => {
               {socialLinksData.map((items, i) => (
                 <Link href={items.link} key={i}>
                   {/* Frosted Glass effect and slightly bigger hover state */}
-                  <div className="bg-white/10 backdrop-blur-sm h-14 w-14 shadow-xl text-base rounded-full flex items-center justify-center text-white/80 hover:text-white hover:bg-[#00cfff]/60 hover:scale-110 transition-all duration-300">
-                    <Icon icon={items.imgSrc} className="text-3xl" />
+                  <div className="bg-white/10 backdrop-blur-sm h-8 w-8 shadow-xl text-base rounded-full flex items-center justify-center text-white/80 hover:text-white hover:bg-[#00cfff]/60 hover:scale-110 transition-all duration-300">
+                    <Icon icon={items.imgSrc} className="text-base" />
                   </div>
                 </Link>
               ))}
@@ -95,7 +95,7 @@ const Footer = () => {
 
         {/* BOTTOM SECTION: Legal & Copyright. Simplified constraints for mobile */}
         <div className="pt-10 md:flex flex-wrap items-center justify-between border-t border-t-white/10 text-center md:text-start">
-          <h4 className="w-full md:w-auto text-lg md:text-base font-normal text-white opacity-60 mb-6 md:mb-0">
+          <h4 className="w-full md:w-auto text-base md:text-base font-normal text-white opacity-60 mb-6 md:mb-0">
             {/* Set the date dynamically */}
             {new Date().getFullYear()}. All rights reserved by{" "}
             <Link
@@ -108,13 +108,13 @@ const Footer = () => {
 
           {/* Adjusted mobile spacing on privacy/terms */}
           <div className="w-full md:w-auto flex gap-6 md:gap-5 justify-center md:justify-end items-center">
-            <h4 className="opacity-60 text-lg md:text-base font-normal text-white hover:opacity-100 transition duration-300">
+            <h4 className="opacity-60 text-base md:text-base font-normal text-white hover:opacity-100 transition duration-300">
               <Link href="/" target="_blank">
                 Privacy policy
               </Link>
             </h4>
             <div className="h-5 bg-white opacity-60 w-0.5"></div>
-            <h4 className="opacity-60 text-lg md:text-base font-normal text-white hover:opacity-100 transition duration-300">
+            <h4 className="opacity-60 text-base md:text-base font-normal text-white hover:opacity-100 transition duration-300">
               <Link href="/" target="_blank">
                 Terms & conditions
               </Link>
